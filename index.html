@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MilkPro - Smart Collection Management</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-cow"></i>
+                    <span>MilkPro</span>
+                </div>
+                <button class="menu-close" id="menuCloseBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                    <i class="fas fa-chart-line"></i><span>Dashboard</span>
+                </a>
+                <a href="#farmers" class="nav-link" data-section="farmers">
+                    <i class="fas fa-users"></i><span>Farmer Collection</span>
+                </a>
+                <a href="#vendors" class="nav-link" data-section="vendors">
+                    <i class="fas fa-truck-fast"></i><span>Vendor Sales</span>
+                </a>
+                <a href="#reports" class="nav-link" data-section="reports">
+                    <i class="fas fa-file-invoice-dollar"></i><span>Reports</span>
+                </a>
+                <a href="#settings" class="nav-link" data-section="settings">
+                    <i class="fas fa-cog"></i><span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="themeToggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i><span>Dark Mode</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-nav">
+                <div class="nav-left">
+                    <button class="menu-toggle" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="nav-right">
+                    <div class="session-badge" id="currentSession">
+                        <i class="fas fa-clock"></i>
+                        <span id="sessionText">Loading...</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="content-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon icon-green"><i class="fas fa-prescription-bottle"></i></div>
+                            <div class="stat-info">
+                                <h3>Collected Today</h3>
+                                <p id="stat-collected">0.0 L</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-blue"><i class="fas fa-store"></i></div>
+                            <div class="stat-info">
+                                <h3>Sold Today</h3>
+                                <p id="stat-sold">0.0 L</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-orange"><i class="fas fa-wallet"></i></div>
+                            <div class="stat-info">
+                                <h3>Payments Due</h3>
+                                <p id="stat-paid">₹0.00</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-purple"><i class="fas fa-sack-dollar"></i></div>
+                            <div class="stat-info">
+                                <h3>Net Income</h3>
+                                <p id="stat-revenue">₹0.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dash-charts">
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h2>Operations Summary</h2>
+                            </div>
+                            <div id="profitSummary" class="profit-container">
+                                <div class="profit-box">
+                                    <span class="label">Net Profit/Loss (Today)</span>
+                                    <span class="value" id="netProfit">₹0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Farmers Section -->
+                <section id="farmers" class="content-section">
+                    <div class="section-actions">
+                        <button class="btn btn-primary" id="openAddFarmerModal">
+                            <i class="fas fa-plus"></i> Add Entry
+                        </button>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchFarmer" placeholder="Search Serial No...">
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="farmerTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Session</th>
+                                    <th>Serial</th>
+                                    <th>Qty (L)</th>
+                                    <th>Fat %</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="farmerTableBody">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Vendors Section -->
+                <section id="vendors" class="content-section">
+                    <div class="section-actions">
+                        <button class="btn btn-primary" id="openAddVendorModal">
+                            <i class="fas fa-plus"></i> Add Sale
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table id="vendorTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Vendor Name</th>
+                                    <th>Qty (L)</th>
+                                    <th>Fat %</th>
+                                    <th>Total ₹</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendorTableBody">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports" class="content-section">
+                    <div class="report-filters card">
+                        <div class="filter-grid">
+                            <div class="form-group">
+                                <label>Report Period</label>
+                                <select id="reportType">
+                                    <option value="daily">Daily Report</option>
+                                    <option value="fifteen">15-Day Cycle</option>
+                                    <option value="monthly">Monthly Report</option>
+                                    <option value="custom">Custom Range</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" id="reportStart">
+                            </div>
+                            <div class="form-group">
+                                <label>End Date</label>
+                                <input type="date" id="reportEnd">
+                            </div>
+                            <button class="btn btn-secondary" id="generateReport">
+                                <i class="fas fa-sync"></i> Generate
+                            </button>
+                        </div>
+                    </div>
+                    <div id="reportOutput" class="report-results card hidden">
+                        <div class="report-header">
+                            <h2 id="reportTitle">Report Results</h2>
+                            <div class="report-btns">
+                                <button class="btn btn-outline" id="printReport"><i class="fas fa-print"></i> Print</button>
+                                <button class="btn btn-outline" id="exportExcel"><i class="fas fa-file-csv"></i> CSV</button>
+                            </div>
+                        </div>
+                        <div class="report-summary-boxes" id="reportSummary">
+                            <!-- Dynamic summary -->
+                        </div>
+                        <div class="table-container">
+                            <table id="reportTable">
+                                <thead id="reportTableHeader"></thead>
+                                <tbody id="reportTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings" class="content-section">
+                    <div class="card">
+                        <h2>Application Settings</h2>
+                        <p>Configure your factory rates and business information.</p>
+                        <form id="settingsForm" class="mt-4">
+                            <div class="form-group">
+                                <label>Default Fat Rate (₹/kg fat)</label>
+                                <input type="number" step="0.1" id="baseRate" value="7.5">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Settings</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Farmer Modal -->
+    <div class="modal" id="farmerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="farmerModalTitle">Add Milk Entry</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="farmerForm">
+                <input type="hidden" id="entryId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="fDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Session</label>
+                        <select id="fSession">
+                            <option value="AM">Morning (AM)</option>
+                            <option value="PM">Evening (PM)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Farmer Serial No</label>
+                        <input type="number" id="fSerial" required min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Sample No</label>
+                        <input type="number" id="fSample">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Milk Quantity (L)</label>
+                        <input type="number" step="0.01" id="fQty" required min="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Fat (%)</label>
+                        <input type="number" step="0.1" id="fFat" required min="1" max="15">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Calculated Amount (₹)</label>
+                        <input type="text" id="fAmount" readonly class="readonly-input">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Vendor Modal -->
+    <div class="modal" id="vendorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="vendorModalTitle">Sales Entry</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="vendorForm">
+                <input type="hidden" id="saleId">
+                <div class="form-group">
+                    <label>Vendor/Customer Name</label>
+                    <input type="text" id="vName" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="vDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity (L)</label>
+                        <input type="number" step="0.01" id="vQty" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fat (%)</label>
+                        <input type="number" step="0.1" id="vFat" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Price (₹)</label>
+                        <input type="number" step="0.01" id="vAmount" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Record Sale</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
